@@ -1,5 +1,17 @@
 # Getting Started with Create React App
 
+### fundamentals
+- React-redux
+- Redux
+- Context
+- Hook
+- Formik
+- React-router
+- Yup
+- Jest for test ( Basicly )
+- React-paginate
+- Design pattern
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
