@@ -1,0 +1,3 @@
+export const SEARCH_QUERY_ACTION = {
+  SET_SEARCH_QUERY: "SET_SEARCH_QUERY",
+};
