@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import testImage from "../components/image/tesodev.png";
 import LeftArrow from "../components/icon/LeftArrow";
 import FormikErrorFocus from "formik-error-focus";
-import { Field, Form, Formik, ErrorMessage, useFormik } from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import styled from "styled-components";
+import { NotifyMessageContext } from "../context/NotifyMessageCtx";
+import { SET_DATA, SET_SEARCH_QUERY } from "../store/actions";
+import { formatDate } from "../utils/dateTime";
 
 const AddNewPage = () => {
   const navigate = useNavigate();
@@ -26,10 +28,48 @@ const AddNewPage = () => {
     email: Yup.string().email("Invalid email").required("Email required"),
   });
 
+  const { getElementValue } = useContext(NotifyMessageContext);
+
+  const handleSubmit = (values) => {
+    if (
+      values.namesurname.split(" ").length >= 2 &&
+      values.namesurname.split(" ")[1] !== ""
+    ) {
+      getElementValue(
+        "You entered the data correctly. Added Successfully",
+        false
+      );
+      const saveValue = {
+        name: values?.namesurname.split(" ")[0],
+        surname: values?.namesurname.split(" ")[1],
+        city: values?.city,
+        country: values?.country,
+        email: values?.email,
+        date: formatDate(new Date()),
+      };
+      SET_DATA([
+        saveValue.name,
+        saveValue.surname,
+        saveValue.company,
+        saveValue.email,
+        saveValue.date,
+        saveValue.country,
+        saveValue.city,
+      ]);
+    } else {
+      getElementValue("Name and surname should contain at least 2 words", true);
+    }
+  };
+
   return (
     <>
       <div
-        style={{ display: "flex", flexDirection: "column", padding: "40px" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: "40px",
+          position: "relative",
+        }}
       >
         <div>
           <div
@@ -43,7 +83,12 @@ const AddNewPage = () => {
             <Link to={"/"}>
               <img src={testImage} style={{ width: "149px", height: "63px" }} />
             </Link>
-            <div onClick={() => navigate(-1)}>
+            <div
+              onClick={() => {
+                SET_SEARCH_QUERY("");
+                navigate(-1);
+              }}
+            >
               <LeftArrow />
             </div>
             <text
@@ -74,7 +119,7 @@ const AddNewPage = () => {
                   }}
                   validationSchema={SignupSchema}
                   onSubmit={(values) => {
-                    console.log(values);
+                    handleSubmit(values);
                   }}
                 >
                   {({ errors, touched }) => (
@@ -313,14 +358,20 @@ const AddNewPage = () => {
                                 fontWeight: "700",
                                 fontSize: "18px",
                               }}
-                              disabled={!errors.namesurname && !errors.country && !errors.city && !errors.email ? false : true}
+                              disabled={
+                                !errors.namesurname &&
+                                !errors.country &&
+                                !errors.city &&
+                                !errors.email
+                                  ? false
+                                  : true
+                              }
                             >
                               Add
                             </button>
                           </div>
                         </div>
                         <FormikErrorFocus
-                          // See scroll-to-element for configuration options: https://www.npmjs.com/package/scroll-to-element
                           offset={0}
                           align={"top"}
                           focusDelay={0}
