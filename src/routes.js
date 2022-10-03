@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Outlet, Link } from "react-router-dom";
 //import store from "./store";
-import Otherpage from "./pages/DetailsPage";
+import DetailsPage from "./pages/DetailsPage";
 import Homepage from "./pages/HomePage";
 import AddNewPage from "./pages/AddNewPage";
 
 const ROUTES = [
   {
     path: "details",
-    component: () => <Otherpage />,
+    component: () => <DetailsPage />,
   },
   {
     path: "addnew",
